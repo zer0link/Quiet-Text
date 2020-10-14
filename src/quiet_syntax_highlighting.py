@@ -10,7 +10,7 @@ class SyntaxHighlighting():
     def __init__(self, parent, text_widget, initial_content):
         self.settings = parent.loader.load_settings_data()
         self.syntax = parent.loader.load_default_syntax()
-        self.theme = parent.loader.load_default_theme()
+        self.default_theme = parent.loader.load_default_theme()
 
         self.parent = parent
         self.text = text_widget
@@ -28,13 +28,13 @@ class SyntaxHighlighting():
         self.object_tokens = self.syntax['object_names']
         self.text_tokens = self.syntax['text']
 
-        self.comment_color = self.theme['comment_color']
-        self.string_color = self.theme['string_color']
-        self.number_color = self.theme['number_color']
-        self.keyword_color = self.theme['keyword_color']
-        self.function_color = self.theme['function_color']
-        self.class_color = self.theme['class_self_color']
-        self.object_color = self.theme['object_color']
+        self.comment_color = self.default_theme['comment_color']
+        self.string_color = self.default_theme['string_color']
+        self.number_color = self.default_theme['number_color']
+        self.keyword_color = self.default_theme['keyword_color']
+        self.function_color = self.default_theme['function_color']
+        self.class_color = self.default_theme['class_self_color']
+        self.object_color = self.default_theme['object_color']
         self.text_color = parent.font_color
 
 
@@ -73,10 +73,11 @@ class SyntaxHighlighting():
 
 
     def initial_highlight(self, *args):
+        for tag in self.text.tag_names():
+            self.text.tag_delete(tag)
+
         content = self.text.get("1.0", tk.END)
-
         self.text.mark_set("range_start", "1.0")
-
         data = self.text.get("1.0", tk.END)
         for token, content in lex(data, self.lexer):
             self.text.mark_set("range_end", "range_start + %dc" % len(content))
@@ -111,8 +112,8 @@ class SyntaxHighlighting():
         settings['menu_active_bg'] = new_config['menu_bg_active']
         settings['menu_active_fg'] = new_config['menu_fg_active']  
         self.parent.loader.store_settings_data(settings)
-
         self.parent.reconfigure_settings()
+
         self.initial_highlight()
 
 
