@@ -196,6 +196,17 @@ class Menubar:
     def show_menu(self):
         self._parent.master.config(menu=self._menubar)
 
+    def load_theme(self, theme_name:str = 'gruvbox'):
+        switcher = {
+            'monokai': self.load_monokai,
+            'monokai_pro': self.load_monokai_pro,
+            'gruvbox': self.load_gruvbox,
+            'solarized': self.load_solarized,
+            'dark-heart': self.load_darkheart,
+            'githubly': self.load_githubly
+        }
+        switcher.get(theme_name.lower(), 'Unknown theme')
+
     def load_monokai_pro(self):
         self.syntax.load_new_theme('theme_configs/Python3/monokai_pro.yaml')
 
